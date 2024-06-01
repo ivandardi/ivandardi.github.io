@@ -1,0 +1,48 @@
+base_url = "https://ivandardi.github.io"
+compile_sass = true
+build_search_index = true
+# minify_html = true
+encode_plaintext_email = true
+
+taxonomies = [
+    {name = "tags", feed = true},
+]
+
+# Theme variables
+theme = "tabi"
+title = "How did we get here?"
+
+[markdown]
+highlight_code = true
+
+[extra]
+default_theme = "light"
+skin = "teal"
+favicon_emoji = "🦀"
+invert_title_order = true
+
+remote_repository_url = "https://github.com/ivandardi/ivandardi.github.io"
+
+menu = [
+    { name = "about", url = "about", trailing_slah = true },
+    { name = "services", url = "services", trailing_slah = true },
+    { name = "contact", url = "contact", trailing_slah = true },
+    { name = "blog", url = "blog", trailing_slash = true },
+    { name = "tags", url = "tags", trailing_slash = true },
+    { name = "archive", url = "archive", trailing_slash = true },
+]
+
+allowed_domains = [
+    { directive = "font-src", domains = ["'self'", "data:"] },
+    { directive = "img-src", domains = ["'self'", "https://*", "data:"] },
+    { directive = "script-src", domains = ["'self'"] },
+    { directive = "style-src", domains = ["'self'"] },
+    { directive = "frame-src", domains = ["https://www.youtube-nocookie.com"] },
+]
+
+socials = [
+    { name = "github", url = "https://github.com/ivandardi/", icon = "github" },
+    { name = "linkedin", url = "https://linkedin.com/ivan-dardi/", icon = "linkedin" },
+]
+
+email = "aXZhbmJvcmdpYWRhcmRpQGdtYWlsLmNvbQ=="
