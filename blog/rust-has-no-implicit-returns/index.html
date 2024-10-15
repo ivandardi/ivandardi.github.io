@@ -1,0 +1,379 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base" content="https://ivandardi.github.io">
+
+    
+    <title>Rust has no implicit return • Programming Insights</title>
+
+    
+    
+    
+        <link rel=icon href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 55"><text y=".7em" font-size="82">🦀</text></svg>'>
+    
+
+    
+    
+
+    
+    
+    
+        <link rel="stylesheet" href="https://ivandardi.github.io/inter_subset_en.css?h=d8cf4ad058d6c3a4015b">
+    
+
+    
+        <link rel="stylesheet" href="https://ivandardi.github.io/main.css?h=723bd2449e111301496a" />
+        <link rel="stylesheet" href="https://ivandardi.github.io/skins/teal.css?h=bd19e558a52d678a50de" />
+
+    <meta name="color-scheme" content="light dark" />
+        <meta name="description" content="How returns work in Rust, and how implicit returns are a myth." />
+        <meta property="og:description" content="How returns work in Rust, and how implicit returns are a myth." />
+
+    
+        <meta name="robots" content="index, nofollow" />
+    
+
+    <meta property="og:title" content="Rust has no implicit return" />
+    <meta property="og:type" content="article" />
+
+    
+
+    <meta property="og:locale" content="en_GB" />
+
+    <meta property="og:url" content="https:&#x2F;&#x2F;ivandardi.github.io&#x2F;blog&#x2F;rust-has-no-implicit-returns&#x2F;" /><meta property="og:site_name" content="Programming Insights"><meta http-equiv="Content-Security-Policy"
+content="default-src 'self';font-src &#x27;self&#x27; data:;img-src &#x27;self&#x27; https:&#x2F;&#x2F;* data:;style-src &#x27;self&#x27;;frame-src https:&#x2F;&#x2F;www.youtube-nocookie.com;connect-src 'self';script-src 'self' 'self'">
+
+        <noscript><link rel="stylesheet" href="https://ivandardi.github.io/no_js.css"/></noscript>
+        <script type="text/javascript" src="https://ivandardi.github.io/js/initializeTheme.min.js"></script>
+        <script defer src="https://ivandardi.github.io/js/themeSwitcher.min.js"></script><script defer src="https://ivandardi.github.io/search_index.en.js?h=3859358a42f6050e23bf"></script>
+        <script defer src="https://ivandardi.github.io/js/searchElasticlunr.min.js?h=3626c0ef99daa745b31e"></script>
+
+        </head>
+
+
+<body>
+    <header>
+    <nav class="navbar">
+        <div class="nav-title">
+            <a class="home-title" href="https://ivandardi.github.io">Programming Insights</a>
+        </div>
+            <div class="nav-navs">
+                <ul>
+                        
+                            <li>
+                                
+                                <a class="nav-links no-hover-padding" href="https://ivandardi.github.io/about/">
+                                about
+                                </a>
+                            </li>
+                        
+                            <li>
+                                
+                                <a class="nav-links no-hover-padding" href="https://ivandardi.github.io/services/">
+                                services
+                                </a>
+                            </li>
+                        
+                            <li>
+                                
+                                <a class="nav-links no-hover-padding" href="https://ivandardi.github.io/contact/">
+                                contact
+                                </a>
+                            </li>
+                        
+                            <li>
+                                
+                                <a class="nav-links no-hover-padding" href="https://ivandardi.github.io/blog/">
+                                blog
+                                </a>
+                            </li>
+                        
+                            <li>
+                                
+                                <a class="nav-links no-hover-padding" href="https://ivandardi.github.io/tags/">
+                                tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                
+                                <a class="nav-links no-hover-padding" href="https://ivandardi.github.io/archive/">
+                                archive
+                                </a>
+                            </li>
+                        <li class="js">
+                        <div role="button" tabindex="0" id="search-button" class="search-icon interactive-icon" title="Click or press $SHORTCUT to open search" aria-label="Click or press $SHORTCUT to open search">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                            </svg>
+                        </div>
+                    </li>
+
+                    
+                    
+
+                    <li class="theme-switcher-wrapper js"><div
+        title="Toggle dark&#x2F;light mode"
+        class="theme-switcher"
+        tabindex="0"
+        role="button"
+        aria-label="Toggle dark mode"
+        aria-pressed="false">
+    </div><div
+        title="Reset mode to default"
+        class="theme-resetter arrow"
+        tabindex="0"
+        role="button"
+        aria-hidden="true"
+        aria-label="Reset mode to default">
+    </div>
+
+</li>
+</ul>
+            </div>
+        
+    </nav>
+</header>
+
+    <div class="content">
+
+        
+        
+
+
+
+
+<main>
+    <article>
+        <h1 class="article-title">
+            Rust has no implicit return
+        </h1>
+
+        <ul class="meta"><li>15th Oct 2024</li>&nbsp;•&nbsp;<li title="922 words">5 min read</li>&nbsp;•&nbsp;<li>Tags:&nbsp;</li><li><a href="https://ivandardi.github.io/tags/rust/">rust</a>,&nbsp;</li><li><a href="https://ivandardi.github.io/tags/implicit-return/">implicit return</a></li></ul><ul class="meta last-updated"><li>Updated on 15th Oct 2024</li>
+                
+                •&nbsp;<li><a href="https://github.com/ivandardi/ivandardi.github.io/commits/main/content/blog&#x2F;rust-has-no-implicit-returns.md"  rel="">See changes<small>&nbsp;<span class="arrow-corner">↗</span></small></a></li>
+                
+            
+        </ul>
+
+        
+
+        
+        
+
+        <section class="body">
+            
+            
+            <p>One of the things that makes Rust unique compared to other languages is its approach to returns. If you've come from languages like Python or JavaScript, you might be used to always using the <code>return</code> keyword whenever you want to return something. In Rust, however, you don't always need to use the <code>return</code> keyword. That behavior ends up being very confusing for some people, and it's usually known as &quot;implicit returns&quot;. With that in mind, let's explain what it means and how returns actually work in Rust.</p>
+<h2 id="expressions-everywhere"><a class="header-anchor no-hover-padding" href="#expressions-everywhere" aria-label="Anchor link for: expressions-everywhere"><span class="link-icon" aria-hidden="true"></span></a>
+Expressions Everywhere</h2>
+<p>In Rust, the building blocks of everything are expressions. There are also statements, but they are just expressions that evaluate to the unit type <code>()</code>. In simple terms, a function consists of a sequence of expressions, which are separated by semicolons.</p>
+<p>Here's a basic example of a Rust function:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">sum</span><span>(</span><span style="color:#bf616a;">a</span><span>: </span><span style="color:#b48ead;">i32</span><span>, </span><span style="color:#bf616a;">b</span><span>: </span><span style="color:#b48ead;">i32</span><span>) -&gt; </span><span style="color:#b48ead;">i32 </span><span>{
+</span><span>    a + b
+</span><span>}
+</span></code></pre>
+<p>In this example, there's no return keyword, but the function still returns the value of <code>a + b</code>. This works because <code>a + b</code> is an expression, and it's the last thing evaluated in the function. In Rust, <strong>functions always return the value of the last evaluated expression</strong>.</p>
+<p>Notice the absence of a semicolon (;) at the end of the <code>a + b</code> line. This is what makes the Rust function return the expression. But how does that really work?</p>
+<h2 id="the-role-of-the-semicolon"><a class="header-anchor no-hover-padding" href="#the-role-of-the-semicolon" aria-label="Anchor link for: the-role-of-the-semicolon"><span class="link-icon" aria-hidden="true"></span></a>
+The Role of the Semicolon (;)</h2>
+<p>The semicolon (;) in Rust doesn't mean &quot;end of statement&quot; like it does in some other languages. Instead, it behaves like an expression separator. Let's look at a more detailed example to see how it works:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">example</span><span>() -&gt; </span><span style="color:#b48ead;">i32 </span><span>{
+</span><span>    </span><span style="color:#b48ead;">let</span><span> x = </span><span style="color:#d08770;">5</span><span>;
+</span><span>    </span><span style="color:#b48ead;">let</span><span> y = </span><span style="color:#d08770;">10</span><span>;
+</span><span>    x + y;
+</span><span>}
+</span></code></pre>
+<p>At first glance, you might think that this function would return <code>15</code> (since <code>x + y</code> is <code>15</code>), but it actually returns <code>()</code>, which creates a compiler error. Why? Because <code>x + y;</code> has a semicolon at the end.</p>
+<p>For us to understand how that happens,  let's rewrite the expression block in that function in a different way and label each expression in it:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">let</span><span> x = </span><span style="color:#d08770;">5 </span><span>; </span><span style="color:#b48ead;">let</span><span> y = </span><span style="color:#d08770;">10 </span><span>; x + y ; ε
+</span><span>+-------+   +--------+   +---+   +
+</span><span>    A            B         C     D
+</span></code></pre>
+<p>In Rust, a <code>let</code> statement is exactly what it says on the tin: a statement. Statements can be seen as expressions that evaluate to <code>()</code>. Therefore, in this case, <code>A</code> and <code>B</code> are statements.</p>
+<p>When it comes to expression <code>C</code>, we can see that it is not a statement. It evaluates to <code>15</code>, therefore making it an expression. However, the value of that expression isn't being saved anywhere, so it just gets discarded.</p>
+<p>Now, for expression <code>D</code>, I'm borrowing a concept from compiler books. If you've read any books about writing compilers, you may have come across the symbol <code>ε</code>. That symbol represents an empty string. Note that it's different from the empty string <code>&quot;&quot;</code>. The <code>ε</code> is necessary because the semicolon is an expression separator. That is, a semicolon always needs to be between two expressions so that it can separate them. A semicolon-terminated expression list, just like in the example, doesn't have a final expression that the last semicolon can separate from the rest. Therefore, the Rust compiler adds <code>ε</code> at the end of the expression list to allow the last semicolon to separate two expressions as intended.</p>
+<p>And with all of that in mind, we reach the final piece of information: <strong><code>ε</code> gets evaluated to <code>()</code></strong>.</p>
+<p>To illustrate that, let's rewrite the expression block again, but with the values of each expression:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span>    ()    ;     ()     ;  </span><span style="color:#d08770;">15   </span><span>; ()
+</span><span>+-------+   +--------+   +---+   +
+</span><span>    A            B         C     D
+</span></code></pre>
+<p>As we can see, the statements got evaluated to <code>()</code>, the expression got evaluated to <code>15</code>, and the <code>ε</code> got evaluated to <code>()</code>. And since <code>()</code> is the value of the last evaluated expression, that's what the Rust function ends up returning.</p>
+<p>Let's remove the semicolon at the end of the function.</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">example</span><span>() -&gt; </span><span style="color:#b48ead;">i32 </span><span>{
+</span><span>    </span><span style="color:#b48ead;">let</span><span> x = </span><span style="color:#d08770;">5</span><span>;
+</span><span>    </span><span style="color:#b48ead;">let</span><span> y = </span><span style="color:#d08770;">10</span><span>;
+</span><span>    x + y
+</span><span>}
+</span></code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">let</span><span> x = </span><span style="color:#d08770;">5 </span><span>; </span><span style="color:#b48ead;">let</span><span> y = </span><span style="color:#d08770;">10 </span><span>; x + y
+</span><span>+-------+   +--------+   +---+
+</span><span>    A            B         C
+</span></code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span>    ()    ;     ()     ;  </span><span style="color:#d08770;">15
+</span><span>+-------+   +--------+   +---+
+</span><span>    A            B         C
+</span></code></pre>
+<p>With that last semicolon gone, the Rust compiler doesn't add <code>ε</code> at the end of the expression list, and <code>15</code> is now the last value of the expression list, which gets returned from the function because functions always return the value of the last evaluated expression.</p>
+<h2 id="generalizing-beyond-functions"><a class="header-anchor no-hover-padding" href="#generalizing-beyond-functions" aria-label="Anchor link for: generalizing-beyond-functions"><span class="link-icon" aria-hidden="true"></span></a>
+Generalizing beyond functions</h2>
+<p>That behavior applies to everything, not just functions. Here's an example that doesn't use functions.</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span>() {
+</span><span>    </span><span style="color:#b48ead;">let</span><span> a = </span><span style="color:#d08770;">3.0</span><span>;
+</span><span>    </span><span style="color:#b48ead;">let</span><span> b = </span><span style="color:#d08770;">4.0</span><span>;
+</span><span>
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">let</span><span> x = {
+</span><span>        </span><span style="color:#b48ead;">let</span><span> a_squared: </span><span style="color:#b48ead;">f32 </span><span>= a * a;
+</span><span>        </span><span style="color:#b48ead;">let</span><span> b_squared: </span><span style="color:#b48ead;">f32 </span><span>= b * b;
+</span><span>
+</span><span>        (a_squared + b_squared).</span><span style="color:#96b5b4;">sqrt</span><span>()
+</span><span>    };
+</span><span>}
+</span></code></pre>
+<p>The <code>let x</code> statement is followed by an expression block. An expression block is a list of semicolon-separated expressions surrounded by <code>{}</code> brackets, and they behave the same way as explained above. In fact, you can syntactically see functions as:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">function_name</span><span>() -&gt; ReturnType &lt;expression_block&gt;
+</span></code></pre>
+<h2 id="final-thoughts"><a class="header-anchor no-hover-padding" href="#final-thoughts" aria-label="Anchor link for: final-thoughts"><span class="link-icon" aria-hidden="true"></span></a>
+Final Thoughts</h2>
+<p>So, what's the takeaway? Rust doesn't have implicit returns because it always returns the result of the last evaluated expression in an expression block. And if there isn't a final expression in an expression list inside an expression block, Rust fills it in with <code>ε</code>, which gets evaluated to <code>()</code>.</p>
+<p>The above explanation isn't the easiest or the most intuitive to learn, however, and so most people internalize it as &quot;If you want to return a value, you can remove the semicolon from the last expression and it'll get implicitly returned&quot;. However, that way of phrasing it doesn't fully explain what's going on under the hood, which creates a lot of confusion and misconceptions about Rust's &quot;implicit returns&quot;. Hopefully this article helps you better understand how returns actually work in Rust.</p>
+
+        </section>
+
+        
+        
+        
+        
+
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+
+        
+        
+
+        
+        
+
+    </article>
+</main>
+
+
+<span id="copy-success" class="hidden">
+        Copied!
+    </span>
+    <span id="copy-init" class="hidden">
+        Copy code to clipboard
+    </span>
+    <script defer src="https://ivandardi.github.io/js/copyCodeToClipboard.min.js"></script>
+    </div>
+    <footer>
+    <section>
+        <nav class="socials nav-navs">
+                <ul>
+                    
+                    
+                    
+                    <li class="js"><a class="nav-links no-hover-padding social" href="#" data-encoded-email="aXZhbmJvcmdpYWRhcmRpQGdtYWlsLmNvbQ=="><img loading="lazy" alt="email" title="email" src="https://ivandardi.github.io/social_icons/email.svg">
+                            </a>
+                        </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me"  href="https://github.com/ivandardi/">
+                                    <img loading="lazy" alt="github" title="github" src="https://ivandardi.github.io/social_icons/github.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me"  href="https://linkedin.com/ivan-dardi/">
+                                    <img loading="lazy" alt="linkedin" title="linkedin" src="https://ivandardi.github.io/social_icons/linkedin.svg">
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            
+        </nav>
+
+        
+        <nav class="nav-navs">
+        </nav>
+
+        <div class="credits">
+            <small>
+                
+
+                
+                Powered by
+                <a rel=""  href="https://www.getzola.org">Zola</a>
+                &amp;
+                <a rel=""  href="https://github.com/welpo/tabi">tabi</a>
+
+                •
+                    <a rel=""  href="https:&#x2F;&#x2F;github.com&#x2F;ivandardi&#x2F;ivandardi.github.io">
+                        Site source
+                    </a></small>
+        </div>
+    </section>
+
+    <script src="https://ivandardi.github.io/js/decodeMail.min.js" async></script><div id="searchModal" class="search-modal js" role="dialog" aria-labelledby="modalTitle">
+    <h1 id="modalTitle" class="visually-hidden">Search</h1>
+    <div id="modal-content">
+        <div id="searchBar">
+            <div class="search-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                    <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                </svg>
+            </div>
+            <input id="searchInput" role="combobox" autocomplete="off" spellcheck="false" aria-expanded="false" aria-controls="results-container" placeholder="Search…"/>
+            <div id="clear-search" class="close-icon interactive-icon" tabindex="0" role="button" title="Clear search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                </svg>
+            </div>
+        </div>
+        <div id="results-container">
+            <div id="results-info"><span id="zero_results"> No results</span>
+                <span id="one_results"> $NUMBER result</span>
+                <span id="many_results"> $NUMBER results</span><span id="two_results"> $NUMBER results</span>
+                <span id="few_results"> $NUMBER results</span>
+            </div>
+            <div id="results" role="listbox"></div>
+        </div>
+    </div>
+</div>
+</footer>
+
+</body>
+
+</html>
