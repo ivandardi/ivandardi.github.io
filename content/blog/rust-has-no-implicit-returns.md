@@ -1,5 +1,5 @@
 +++
-title = "Rust has no \"implicit return\""
+title = "Rust has no implicit return"
 date = 2024-10-15
 updated = 2024-10-15
 description = "How returns work in Rust, and how implicit returns are a myth."
@@ -8,7 +8,6 @@ description = "How returns work in Rust, and how implicit returns are a myth."
 tags = ["rust", "implicit return"]
 +++
 
-# Rust has no "implicit return"
 
 One of the things that makes Rust unique compared to other languages is its approach to returns. If you've come from languages like Python or JavaScript, you might be used to always using the `return` keyword whenever you want to return something. In Rust, however, you don't always need to use the `return` keyword. That behavior ends up being very confusing for some people, and it's usually known as "implicit returns". With that in mind, let's explain what it means and how returns actually work in Rust.
 
