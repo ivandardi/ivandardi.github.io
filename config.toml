@@ -10,7 +10,7 @@ taxonomies = [
 
 # Theme variables
 theme = "tabi"
-title = "How did we get here?"
+title = "Programming Insights"
 
 [markdown]
 highlight_code = true
