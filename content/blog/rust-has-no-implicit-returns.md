@@ -97,7 +97,7 @@ Now, for expression `D`, I'm borrowing a concept from the literature. If you've 
 
 And with all of that in mind, we reach the crucial piece of information: **`ε` gets evaluated to `()`**.
 
-To illustrate that, let's rewrite the expression block, this time replacing the code with the the values of their respective evaluations:
+To illustrate that, let's rewrite the expression block, this time replacing the code with the values of their respective evaluations:
 
 ```rust
     ()    ;     ()     ;  15   ; ()
