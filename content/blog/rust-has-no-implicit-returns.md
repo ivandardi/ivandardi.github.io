@@ -112,7 +112,7 @@ fn main() {
     let result: () = example_unit_type();
 }
 
-fn example_unit_type() -> i32 {
+fn example_unit_type() {
     let x = 5;
     let y = 10;
     x + y;
