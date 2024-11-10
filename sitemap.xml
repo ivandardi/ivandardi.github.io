@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="https://ivandardi.github.io/sitemap_style.xsl" type="text/xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://ivandardi.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/about/</loc>
+        <lastmod>2024-11-09</lastmod>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/archive/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/blog/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/blog/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/blog/rust-has-no-implicit-returns/</loc>
+        <lastmod>2024-11-09</lastmod>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/blog/website-launch/</loc>
+        <lastmod>2024-11-09</lastmod>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/services/</loc>
+        <lastmod>2024-11-09</lastmod>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/tags/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/tags/implicit-return/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/tags/meta/</loc>
+    </url>
+    <url>
+        <loc>https://ivandardi.github.io/tags/rust/</loc>
+    </url>
+</urlset>
